@@ -2,7 +2,7 @@ import time
 import os
 
 allowed_24 = list(range(1,25))
-allowed_60 = list(range(0, 61))
+allowed_60 = list(range(0, 60))
 
 def correctInput(input_time):
     given = input_time.split(":")
