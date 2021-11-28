@@ -20,7 +20,7 @@ def correctInput(input_time):
             condition = True
             break
         else:
-            input_time = str(input('Please make sure your input has the correct format! (Format: H(1-24):M(1-60)): '))
+            input_time = str(input('Please make sure your input has the correct format! (Format: H(1-24):M(1-59)): '))
             given = input_time.split(":")
             while True:
                 if checkListForNumbers(given) == True:
