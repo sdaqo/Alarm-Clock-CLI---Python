@@ -1,8 +1,8 @@
 import time
 import os
 
-allowed_24 = list(range(1,25))
-allowed_60 = list(range(0, 60))
+allowed_hours = list(range(1,25))
+allowed_minutes = list(range(0, 60))
 
 def correctInput(input_time):
     given = input_time.split(":")
@@ -16,11 +16,11 @@ def correctInput(input_time):
             given = input_time.split(":")
 
     while condition == False: 
-        if len(given) == 2 and int(given[0]) in allowed_24 and int(given[1]) in allowed_60: 
+        if len(given) == 2 and int(given[0]) in allowed_hours and int(given[1]) in allowed_minutes: 
             condition = True
             break
         else:
-            input_time = str(input('Please make sure your input has the correct format! (Format: H(1-24):M(1-60)): '))
+            input_time = str(input('Please make sure your input has the correct format! (Format: H(1-24):M(1-59)): '))
             given = input_time.split(":")
             while True:
                 if checkListForNumbers(given) == True:
@@ -82,6 +82,7 @@ def currentTime():
     t = time.localtime()
     current_time = time.strftime("%H:%M", t)
     print("Current Time: " + current_time) 
+    
     
 def clearConsole():
     command = 'clear'
