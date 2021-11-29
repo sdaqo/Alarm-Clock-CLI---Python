@@ -1,8 +1,13 @@
 import time
 import os
+from playsound import _playsoundWin
+import glob
+import threading
 
 allowed_hours = list(range(1,25))
 allowed_minutes = list(range(0, 60))
+allowed_sounds = list(range(1, 23))
+keep_going = True
 
 def correctInput(input_time):
     given = input_time.split(":")
@@ -20,7 +25,7 @@ def correctInput(input_time):
             condition = True
             break
         else:
-            input_time = str(input('Please make sure your input has the correct format! (Format: H(1-24):M(1-59)): '))
+            input_time = str(input('[False Input] Time you want your alarm to ring (Format: H:M [24-Hour-Format]): '))
             given = input_time.split(":")
             while True:
                 if checkListForNumbers(given) == True:
@@ -31,12 +36,22 @@ def correctInput(input_time):
     return given
 
 def checkListForNumbers(input):
-    if input[0].isnumeric() and input[1].isnumeric():
-        x = True        
+    input = list(input)
+    if len(input) == 2:
+        if input[0].isnumeric() and input[1].isnumeric():
+            x = True        
+        else:
+            x = False
     else:
-        x = False
+        try:
+            if input[0].isnumeric():
+                x = True
+            else:
+                x = False
+        except:
+            x = False
     return x
-
+        
 def countdown(t):
     while t:
         mins, secs = divmod(t, 60)
@@ -89,3 +104,53 @@ def clearConsole():
     if os.name in ('nt', 'dos'): 
         command = 'cls'
     os.system(command)
+
+
+def pickSound():
+    alarms = glob.glob('alarms/*.mp3')
+    while True:
+        pick_alarm = input("Pick your Alarm-Tone (1-22): ")
+        
+        while True:
+            if checkListForNumbers(pick_alarm) == True and int(pick_alarm) in allowed_sounds:
+                break
+            else:
+                pick_alarm = input("[False Input] Pick your Alarm-Tone (1-22): ")
+                continue
+
+            
+        _playsoundWin("{0}".format(str(alarms[int(pick_alarm) - 1])))
+        confirm = False
+        
+        while True:
+            confirm = input("Do you want to pick this Sound? (y/N): ")
+            
+            if confirm == "y"or confirm == "Y":
+                confirm = True
+                break
+            elif confirm == "n" or confirm ==  "N":
+                confirm = False
+                break
+            else:
+                continue
+ 
+        if confirm == True:
+            break
+        else:
+            pass
+    name = alarms[int(pick_alarm) - 1].replace("alarms", "").replace(".mp3", "").replace("\\", "")
+    return int(pick_alarm), alarms, name
+
+def key_capture_thread():
+    global keep_going
+    input()
+    keep_going = False
+    
+
+def playsound(picksound_out):
+    threading.Thread(target=key_capture_thread, args=(), name='key_capture_thread', daemon=True).start()
+    
+    while keep_going:
+        print("To exit press the ENTER key.", end="\r")
+        _playsoundWin("{0}".format(str(picksound_out[1][int(picksound_out[0]) - 1])))
+        
