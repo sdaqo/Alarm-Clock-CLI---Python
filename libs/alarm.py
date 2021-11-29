@@ -1,13 +1,16 @@
+import sys
 import time
 import os
-from playsound import _playsoundWin
 import glob
 import threading
+from platform import system
+from playsound import _playsoundWin, _playsoundNix, _playsoundOSX
 
 allowed_hours = list(range(1,25))
 allowed_minutes = list(range(0, 60))
 allowed_sounds = list(range(1, 23))
 keep_going = True
+system = system()
 
 def correctInput(input_time):
     given = input_time.split(":")
@@ -118,8 +121,14 @@ def pickSound():
                 pick_alarm = input("[False Input] Pick your Alarm-Tone (1-22): ")
                 continue
 
-            
-        _playsoundWin("{0}".format(str(alarms[int(pick_alarm) - 1])))
+        if system == "Windows":    
+            _playsoundWin("{0}".format(str(alarms[int(pick_alarm) - 1])))
+        elif system == "Darwin":
+            _playsoundOSX("{0}".format(str(alarms[int(pick_alarm) - 1])))
+        else:
+            _playsoundNix("{0}".format(str(alarms[int(pick_alarm) - 1])))
+        
+        
         confirm = False
         
         while True:
@@ -152,5 +161,11 @@ def playsound(picksound_out):
     
     while keep_going:
         print("To exit press the ENTER key.", end="\r")
-        _playsoundWin("{0}".format(str(picksound_out[1][int(picksound_out[0]) - 1])))
+        
+        if system == "Windows":    
+            _playsoundWin("{0}".format(str(picksound_out[1][int(picksound_out[0]) - 1])))
+        elif system == "Darwin":
+            _playsoundOSX("{0}".format(str(picksound_out[1][int(picksound_out[0]) - 1])))
+        else:
+            _playsoundNix("{0}".format(str(picksound_out[1][int(picksound_out[0]) - 1])))
         
