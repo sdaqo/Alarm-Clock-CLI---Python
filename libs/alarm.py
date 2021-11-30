@@ -146,7 +146,12 @@ def pickSound():
             break
         else:
             pass
-    name = alarms[int(pick_alarm) - 1].replace("alarms", "").replace(".mp3", "").replace("\\", "")
+            
+    if system == "Windows":    
+        name = alarms[int(pick_alarm) - 1].replace("alarms", "").replace(".mp3", "").replace("\\", "")
+    else:
+        name = alarms[int(pick_alarm) - 1].replace("alarms", "").replace(".mp3", "").replace("/", "")
+        
     return int(pick_alarm), alarms, name
 
 def key_capture_thread():
@@ -167,4 +172,4 @@ def playsound(picksound_out):
             _playsoundOSX("{0}".format(str(picksound_out[1][int(picksound_out[0]) - 1])))
         else:
             _playsoundNix("{0}".format(str(picksound_out[1][int(picksound_out[0]) - 1])))
-        
+            
